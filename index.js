@@ -15,7 +15,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// Health check
+// Root health check
 app.get("/", (req, res) => {
   res.json({ status: "SupportME API is running" });
 });
@@ -39,25 +39,25 @@ app.get("/tickets/:tenantId", async (req, res) => {
   }
 });
 
-// Health check for Render
+// Render health check
 app.get("/healthz", (req, res) => {
   res.status(200).send("OK");
 });
-// Get customer info (with Wix site ID + masked ID + badge URL)
-app.get("/customer-info/:id", async (req, res) => {
-  const { id } = req.params;
+
+// Get tenant info (Wix site ID + masked ID + badge URL)
+app.get("/tenant-info/:tenantId", async (req, res) => {
+  const { tenantId } = req.params;
 
   const { data, error } = await supabase
     .from("tenants")
     .select("customer_number, plan, wix_site_id")
-    .eq("id", id)
+    .eq("id", tenantId)  // or .eq("wix_site_id", tenantId) if that's the real key
     .single();
 
   if (error) {
     return res.status(500).json({ error: error.message });
   }
 
-  // Map plan → badge URL (Supabase storage)
   const badges = {
     starter: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/starter.png",
     pro: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/pro.png",
@@ -66,11 +66,10 @@ app.get("/customer-info/:id", async (req, res) => {
     developer: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/dev.png"
   };
 
-  // Mask the last 12 characters of the Wix Site ID
   const maskedId = data.wix_site_id ? data.wix_site_id.slice(-12) : null;
 
   return res.json({
-    customer_number: data.customer_number, // legacy slot
+    tenant_number: data.customer_number, // legacy slot if needed
     wix_site_id: data.wix_site_id,
     masked_id: maskedId,
     plan: data.plan,
