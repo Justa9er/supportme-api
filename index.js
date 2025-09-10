@@ -53,14 +53,21 @@ app.get("/customer-info/:id", async (req, res) => {
 
   if (error) return res.status(500).json({ error: error.message });
 
-  // Map plan → badge URL
-  const badges = {
-    starter: "https://your-wix-url/starter.svg",
-    pro: "https://your-wix-url/pro.svg",
-    premier: "https://your-wix-url/premier.svg",
-    ultimate: "https://your-wix-url/ultimate.svg",
-    developer: "https://your-wix-url/dev.svg"
-  };
+// Map plan → badge URL (Supabase storage)
+const badges = {
+  starter: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/starter.png",
+  pro: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/pro.png",
+  premier: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/pre.png",
+  ultimate: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/ult.png",
+  developer: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/dev.png"
+};
+
+res.json({
+  customer_number: data.customer_number,
+  plan: data.plan,
+  badge_url: badges[data.plan] || null
+});
+
 
   res.json({
     customer_number: data.customer_number,
