@@ -42,12 +42,13 @@ app.get("/tickets/:customerId", async (req, res) => {
 app.get("/healthz", (req, res) => {
   res.status(200).send("OK");
 });
-// Get customer info (placeholder for number + plan badge)
+// Get customer info (with Wix site ID + masked ID + badge URL)
 app.get("/customer-info/:id", async (req, res) => {
   const { id } = req.params;
+
   const { data, error } = await supabase
     .from("tenants")
-    .select("customer_number, plan")
+    .select("customer_number, plan, wix_site_id")
     .eq("id", id)
     .single();
 
@@ -64,12 +65,18 @@ app.get("/customer-info/:id", async (req, res) => {
     developer: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/dev.png"
   };
 
+  // Mask the last 12 characters of the Wix Site ID
+  const maskedId = data.wix_site_id ? data.wix_site_id.slice(-12) : null;
+
   return res.json({
-    customer_number: data.customer_number,
+    customer_number: data.customer_number, // legacy slot
+    wix_site_id: data.wix_site_id,
+    masked_id: maskedId,
     plan: data.plan,
     badge_url: badges[data.plan] || null
   });
 });
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`SupportME API running on port ${PORT}`);
