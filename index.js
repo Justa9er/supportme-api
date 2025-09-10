@@ -52,7 +52,8 @@ app.get("/customer-info/:id", async (req, res) => {
     .single();
 
   if (error) return res.status(500).json({ error: error.message });
-
+  res.json(data);   // 👈 you need to add this line
+});
 // Map plan → badge URL (Supabase storage)
 const badges = {
   starter: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/starter.png",
