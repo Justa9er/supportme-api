@@ -75,7 +75,6 @@ res.json({
     plan: data.plan,
     badge_url: badges[data.plan] || null
   });
-});
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`SupportME API running on port ${PORT}`);
