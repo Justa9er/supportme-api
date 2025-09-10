@@ -51,24 +51,25 @@ app.get("/customer-info/:id", async (req, res) => {
     .eq("id", id)
     .single();
 
-  if (error) return res.status(500).json({ error: error.message });
-  res.json(data);   // 👈 you need to add this line
-});
-// Map plan → badge URL (Supabase storage)
-const badges = {
-  starter: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/starter.png",
-  pro: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/pro.png",
-  premier: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/pre.png",
-  ultimate: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/ult.png",
-  developer: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/dev.png"
-};
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
 
-res.json({
-  customer_number: data.customer_number,
-  plan: data.plan,
-  badge_url: badges[data.plan] || null
-});
+  // Map plan → badge URL (Supabase storage)
+  const badges = {
+    starter: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/starter.png",
+    pro: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/pro.png",
+    premier: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/pre.png",
+    ultimate: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/ult.png",
+    developer: "https://ucekalsakfxczmaxfpkq.supabase.co/storage/v1/object/public/badges/dev.png"
+  };
 
+  return res.json({
+    customer_number: data.customer_number,
+    plan: data.plan,
+    badge_url: badges[data.plan] || null
+  });
+});
 
   res.json({
     customer_number: data.customer_number,
