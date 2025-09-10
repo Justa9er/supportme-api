@@ -38,6 +38,10 @@ app.get("/tickets/:customerId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+// Health check for Render
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+});
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
