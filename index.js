@@ -20,15 +20,15 @@ app.get("/", (req, res) => {
   res.json({ status: "SupportME API is running" });
 });
 
-// Example: Get tickets for a customer
-app.get("/tickets/:customerId", async (req, res) => {
+// Example: Get tickets for a tenant
+app.get("/tickets/:tenantId", async (req, res) => {
   try {
-    const { customerId } = req.params;
+    const { tenantId } = req.params;
 
     const { data, error } = await supabase
       .from("tickets")
-      .select("*")
-      .eq("customer_id", customerId);
+      .select("ticket_number, name, issue_category, priority, status, created_at, updated_at")
+      .eq("tenant_id", tenantId);
 
     if (error) throw error;
 
@@ -38,6 +38,7 @@ app.get("/tickets/:customerId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 // Health check for Render
 app.get("/healthz", (req, res) => {
   res.status(200).send("OK");
