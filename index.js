@@ -70,12 +70,6 @@ app.get("/customer-info/:id", async (req, res) => {
     badge_url: badges[data.plan] || null
   });
 });
-
-  res.json({
-    customer_number: data.customer_number,
-    plan: data.plan,
-    badge_url: badges[data.plan] || null
-  });
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`SupportME API running on port ${PORT}`);
