@@ -46,7 +46,7 @@ app.get("/healthz", (req, res) => {
 app.get("/customer-info/:id", async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
-    .from("customers")
+    .from("tenants")
     .select("customer_number, plan")
     .eq("id", id)
     .single();
