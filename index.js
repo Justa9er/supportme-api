@@ -77,6 +77,24 @@ app.get("/tenant-info/:tenantId", async (req, res) => {
   });
 });
 
+// Generate a signed URL for an attachment (valid 24h)
+app.get("/attachments/:tenantId/:fileName", async (req, res) => {
+  const { tenantId, fileName } = req.params;
+
+  try {
+    const { data, error } = await supabase.storage
+      .from("attachments")
+      .createSignedUrl(`tenant_${tenantId}/${fileName}`, 60 * 60 * 24);
+
+    if (error) throw error;
+
+    res.json({ signedUrl: data.signedUrl });
+  } catch (err) {
+    console.error("Error generating signed URL:", err.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`SupportME API running on port ${PORT}`);
